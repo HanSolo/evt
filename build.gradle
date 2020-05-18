@@ -148,7 +148,7 @@ bintray {
     key  = project.bintrayApiKey
     publications = ['mavenCustom']
     pkg {
-        repo                  = 'evtx'
+        repo                  = 'evt'
         userOrg               = 'hansolo'
         name                  = project.name
         desc                  = description
