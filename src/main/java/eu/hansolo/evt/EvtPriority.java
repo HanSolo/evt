@@ -14,4 +14,12 @@ public enum EvtPriority {
 
     // ******************** Methods *******************************************
     public int getValue() { return value; }
+
+    @Override public String toString() {
+        return new StringBuilder().append("{")
+                                  .append("\"class\":\"").append(getClass().getName()).append("\",")
+                                  .append("\"value\":").append(getValue())
+                                  .append("}")
+                                  .toString();
+    }
 }
