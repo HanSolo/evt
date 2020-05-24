@@ -22,8 +22,8 @@ import eu.hansolo.evt.EvtType;
 
 public class MyValueEvt extends MyEvt {
     public  static final EvtType<MyValueEvt> ANY          = new EvtType<>(MyEvt.ANY, "VALUE");
-    public  static final EvtType<MyValueEvt> VALUE_TYPE_1 = new EvtType<>(MyValueEvt.ANY, "VALUE_TYPE_1");
-    public  static final EvtType<MyValueEvt> VALUE_TYPE_2 = new EvtType<>(MyValueEvt.ANY, "VALUE_TYPE_2");
+    public  static final EvtType<MyValueEvt> VALUE_TYPE_1 = new EvtType<>(MyValueEvt.VALUE_TYPE_1, "VALUE_TYPE_1");
+    public  static final EvtType<MyValueEvt> VALUE_TYPE_2 = new EvtType<>(MyValueEvt.VALUE_TYPE_2, "VALUE_TYPE_2");
     private              double              value;
 
 

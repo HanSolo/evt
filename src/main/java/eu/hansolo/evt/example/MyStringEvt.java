@@ -22,8 +22,8 @@ import eu.hansolo.evt.EvtType;
 
 public class MyStringEvt extends MyEvt {
     public  static final EvtType<MyStringEvt> ANY           = new EvtType<>(MyEvt.ANY, "STRING");
-    public  static final EvtType<MyStringEvt> STRING_TYPE_1 = new EvtType<>(MyStringEvt.ANY, "STRING_TYPE_1");
-    public  static final EvtType<MyStringEvt> STRING_TYPE_2 = new EvtType<>(MyStringEvt.ANY, "STRING_TYPE_2");
+    public  static final EvtType<MyStringEvt> STRING_TYPE_1 = new EvtType<>(MyStringEvt.STRING_TYPE_1, "STRING_TYPE_1");
+    public  static final EvtType<MyStringEvt> STRING_TYPE_2 = new EvtType<>(MyStringEvt.STRING_TYPE_2, "STRING_TYPE_2");
 
     private              String                   string;
 

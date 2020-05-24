@@ -45,6 +45,7 @@ public class MyOtherClass implements MyControl {
                 if (observers.containsKey(type.getName())) {
                     observers.get(type.getName()).forEach(observer -> observer.handle(evt));
                 }
+                observers.get(MyEvt.ANY).forEach(observer -> observer.handle(evt));
             } catch (InterruptedException ex) {
                 return false;
             }
