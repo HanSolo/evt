@@ -4,21 +4,21 @@ package eu.hansolo.evt;
 import java.util.Objects;
 
 
-public class EvtType<T extends Evt> {
+public final class EvtType<T extends Evt> {
     public  static final EvtType<Evt>       ROOT = new EvtType<>("EVENT", null);
     private        final EvtType<? super T> superType;
     private        final String             name;
 
 
     // ******************** Constructors **************************************
-    public EvtType(final String name) {
-        this(ROOT, name);
-    }
     public EvtType(final EvtType<? super T> superType) {
         this(superType, null);
     }
+    public EvtType(final String name) {
+        this(ROOT, name);
+    }
     public EvtType(final EvtType<? super T> superType, final String name) {
-        if (null == superType) { throw new NullPointerException("Event super type must not be null"); }
+        if (null == superType) { throw new NullPointerException("Event super type must not be null (EvtType.name: " + name + ")"); }
         this.superType = superType;
         this.name      = name;
     }
@@ -45,11 +45,12 @@ public class EvtType<T extends Evt> {
     }
 
     @Override public String toString() {
-        return new StringBuilder().append("{")
-                                  .append("\"class\":\"").append(getClass().getName()).append("\",")
-                                  .append("\"name\":\"").append(getName()).append("\",")
-                                  .append("\"supertype\":\"").append(getSuperType().name).append("\",")
-                                  .append("}")
-                                  .toString();
+        return (null != name) ? new StringBuilder().append("{")
+                                                   .append("\"class\":\"").append(getClass().getName()).append("\",")
+                                                   .append("\"name\":\"").append(getName()).append("\",")
+                                                   .append("\"supertype\":\"").append(getSuperType().name).append("\",")
+                                                   .append("}")
+                                                   .toString() :
+                                super.toString();
     }
 }

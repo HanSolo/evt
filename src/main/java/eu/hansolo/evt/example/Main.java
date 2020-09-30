@@ -22,8 +22,9 @@ import java.util.Random;
 
 
 public class Main {
-    private MyClass                      myClass;
+    private MyClass                  myClass;
     private MyOtherClass             myOtherClass;
+    private EvtObserver<MyEvt>       allMyEvtObserver;
     private EvtObserver<MyValueEvt>  valueEventEvtObserver;
     private EvtObserver<MyStringEvt> stringEventEvtObserver;
 
@@ -32,14 +33,16 @@ public class Main {
         myClass      = new MyClass();
         myOtherClass = new MyOtherClass();
 
-        valueEventEvtObserver = e -> System.out.println("New Value Event with priority " + e.getPriority().name() + " and value: " + e.getValue() + " from class " + e.getSource().getClass());
+        valueEventEvtObserver = e -> System.out.println("valueEventEvtObserver: New Value Event with priority " + e.getPriority().name() + " and value: " + e.getValue() + " from class " + e.getSource().getClass());
         myClass.setOnEvt(MyValueEvt.VALUE_TYPE_1, valueEventEvtObserver);
         myOtherClass.setOnEvent(MyValueEvt.VALUE_TYPE_2, valueEventEvtObserver);
 
-        stringEventEvtObserver = e -> System.out.println("New String Event with priority " + e.getPriority().name() + " and string: " + e.getString() + " from class " + e.getSource().getClass());
+        stringEventEvtObserver = e -> System.out.println("stringEventEvtObserver: New String Event with priority " + e.getPriority().name() + " and string: " + e.getString() + " from class " + e.getSource().getClass());
         myClass.setOnEvt(MyStringEvt.STRING_TYPE_1, stringEventEvtObserver);
         myOtherClass.setOnEvent(MyStringEvt.STRING_TYPE_2, stringEventEvtObserver);
 
+        allMyEvtObserver = e -> System.out.println("allMyEvtObserver: New event of type " + e.getEvtType().getName() + " with priority " + e.getPriority().name() + " from class " + e.getSource().getClass());
+        myClass.setOnEvt(MyEvt.ANY, allMyEvtObserver);
 
         myClass.setValue(312);
         myClass.setString("Gerrit");

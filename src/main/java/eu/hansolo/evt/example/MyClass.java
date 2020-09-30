@@ -66,11 +66,12 @@ public class MyClass implements MyControl {
 
     @Override public void fireEvt(final Evt evt) {
         final EvtType<? extends Evt> type = evt.getEvtType();
-
         if (observers.containsKey(type.getName())) {
             observers.get(type.getName()).forEach(observer -> observer.handle(evt));
         }
-        observers.get(MyEvt.ANY).forEach(observer -> observer.handle(evt));
+        if (observers.keySet().contains(MyEvt.ANY.getName())) {
+            observers.get(MyEvt.ANY.getName()).forEach(observer -> observer.handle(evt));
+        }
     }
 
     @Override public void dispose() {

@@ -36,7 +36,7 @@ public class MyEvt extends Evt {
     }
 
 
-    public EvtType<? extends MyEvt> getEvtType() {
+    @Override public EvtType<? extends MyEvt> getEvtType() {
         return (EvtType<? extends MyEvt>) super.getEvtType();
     }
 }

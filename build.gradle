@@ -9,7 +9,7 @@ buildscript {
     }
 }
 
-// TilesFX main build file
+// EVT main build file
 plugins {
     id 'idea'
     id 'java-library'
@@ -49,20 +49,20 @@ if (JavaVersion.current().isJava8Compatible()) {
 jar {
     manifest {
         attributes(
-                'Built-By': System.properties['user.name'],
-                'Created-By': System.properties['java.version'] + " (" + System.properties['java.vendor'] + " " + System.properties['java.vm.version'] + ")",
-                'Build-Date': project.buildDate,
-                'Build-Time': project.buildTime,
-                'Build-Revision': versioning.info.commit,
-                'Specification-Title': project.name,
-                'Specification-Version': project.version,
-                'Implementation-Title': project.name,
+                'Built-By'              : System.properties['user.name'],
+                'Created-By'            : System.properties['java.version'] + " (" + System.properties['java.vendor'] + " " + System.properties['java.vm.version'] + ")",
+                'Build-Date'            : project.buildDate,
+                'Build-Time'            : project.buildTime,
+                'Build-Revision'        : versioning.info.commit,
+                'Specification-Title'   : project.name,
+                'Specification-Version' : project.version,
+                'Implementation-Title'  : project.name,
                 'Implementation-Version': project.version,
-                'Bundle-Name': project.name,
-                'Bundle-License': 'https://www.apache.org/licenses/LICENSE-2.0;description=Apache License Version 2.0;link=https://www.eclipse.org/legal/eplfaq.php',
-                'Bundle-Description': description,
-                'Bundle-SymbolicName': 'eu.hansolo.evt',
-                'Export-Package': 'eu.hansolo.evt,eu.hansolo.evt.example'
+                'Bundle-Name'           : project.name,
+                'Bundle-License'        : 'https://www.apache.org/licenses/LICENSE-2.0;description=Apache License Version 2.0;link=https://www.eclipse.org/legal/eplfaq.php',
+                'Bundle-Description'    : description,
+                'Bundle-SymbolicName'   : 'eu.hansolo.evt',
+                'Export-Package'        : 'eu.hansolo.evt,eu.hansolo.evt.example'
         )
     }
 }

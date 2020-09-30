@@ -1,11 +1,11 @@
 package eu.hansolo.evt;
 
+import java.util.EventObject;
 import java.util.Objects;
 
 
-public class Evt implements Comparable<Evt> {
+public class Evt extends EventObject implements Comparable<Evt> {
     public    static final EvtType<Evt>           ANY = EvtType.ROOT;
-    protected        final Object                 source;
     protected        final EvtType<? extends Evt> evtType;
     private          final EvtPriority            priority;
 
@@ -18,9 +18,9 @@ public class Evt implements Comparable<Evt> {
         this(source, evtType, EvtPriority.NORMAL);
     }
     public Evt(final Object source, final EvtType<? extends Evt> evtType, final EvtPriority priority) {
-        this.source    = source;
-        this.evtType = evtType;
-        this.priority  = priority;
+        super(source);
+        this.evtType  = evtType;
+        this.priority = priority;
     }
 
 
