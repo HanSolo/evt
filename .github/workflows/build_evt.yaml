@@ -1,0 +1,27 @@
+--- # Begin of file
+# EVT Github Actions
+
+on:
+  # Trigger the workflow on push on given branch
+  push:
+    branches:
+      - githubactions
+
+defaults:
+  run:
+    shell: bash
+    working-directory: ./
+
+jobs:
+  job1:
+    runs-on: ubuntu-latest
+    outputs:
+      output1: ${{ steps.step1.outputs.test }}
+      output2: ${{ steps.step2.outputs.test }}
+    steps:
+    - id: step1
+      run: echo "::set-output name=test::hello"
+    - id: step2
+      run: echo "::set-output name=test::world"
+
+... # End of file
