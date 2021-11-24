@@ -1,4 +1,4 @@
-## EVT - Custom Java Events with priority <img align="right" src="https://github.com/foojay2020/badges/raw/main/works_with_openjdk/Works-with-OpenJDK.png" width="100">
+## EVT - Custom Java Events with priority 
 <br>
 
 This projects simply offers custom Java events that supports priorities if you like.
