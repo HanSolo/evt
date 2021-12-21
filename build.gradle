@@ -106,8 +106,8 @@ signing {
 publishing {
     publications {
         mavenCustom(MavenPublication) {
-            group = 'eu.hansolo.fx'
-            artifactId = 'countries'
+            group = 'eu.hansolo'
+            artifactId = 'evt'
             version = "${version}"
 
             from components.java
@@ -123,9 +123,9 @@ publishing {
             }
 
             pom {
-                name = 'Countries'
-                description = 'Countries is a JavaFX library containing controls and info for countries and cities'
-                url = "https://github.com/HanSolo/countries/wiki"
+                name = 'EVT'
+                description = 'EVT offers custom Java events with priority'
+                url = "https://github.com/HanSolo/evt/wiki"
                 licenses {
                     license {
                         name = "The Apache License, Version 2.0"
@@ -140,9 +140,9 @@ publishing {
                     }
                 }
                 scm {
-                    connection = "scm:git:https://HanSolo/countries"
-                    developerConnection = "scm:git:https://HanSolo/countries"
-                    url = "https://github.com/HanSolo/countries"
+                    connection = "scm:git:https://HanSolo/evt"
+                    developerConnection = "scm:git:https://HanSolo/evt"
+                    url = "https://github.com/HanSolo/evt"
                 }
             }
         }
@@ -159,7 +159,7 @@ publishing {
         }
         maven {
             name = "GitHubPackages"
-            url = "https://maven.pkg.github.com/HanSolo/countries"
+            url = "https://maven.pkg.github.com/HanSolo/evt"
             credentials {
                 username = null == ciGHUser  ? ghUser  : ciGHUser
                 password = null == ciGHToken ? ghToken : ciGHToken
