@@ -19,7 +19,7 @@ mainClassName = "$moduleName/eu.hansolo.evt/example/Main"
 
 Date buildTimeAndDate = new Date()
 ext {
-    moduleName      = 'eu.hansolo.fx.countries'
+    moduleName      = 'eu.hansolo.evt'
     buildDate       = new SimpleDateFormat('yyyy-MM-dd').format(buildTimeAndDate)
     buildTime       = new SimpleDateFormat('HH:mm:ss.SSSZ').format(buildTimeAndDate)
     ciOssrhUsername = System.getenv('OSSRH_USERNAME')
