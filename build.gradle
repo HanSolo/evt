@@ -1,52 +1,52 @@
 import java.text.SimpleDateFormat
 
-buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath 'biz.aQute.bnd:biz.aQute.bnd.gradle:4.3.1'
-    }
-}
-
-// EVT main build file
 plugins {
-    id 'idea'
     id 'java-library'
     id 'maven-publish'
-    id 'net.nemerosa.versioning' version '2.10.0'
-    id 'com.jfrog.bintray' version '1.8.5'
+    id 'signing'
+    id 'org.javamodularity.moduleplugin' version '1.8.8'
+    id 'org.beryx.jlink'                 version '2.24.4'
+    id 'net.nemerosa.versioning'         version '2.14.0'
+    id 'biz.aQute.bnd.builder'           version '5.3.0'
 }
 
 apply plugin: 'biz.aQute.bnd.builder'
-
-sourceCompatibility = '11'
-
-wrapper {
-    gradleVersion = '6.4'
-}
+apply plugin: 'maven-publish'
+apply plugin: 'signing'
 
 description = 'EVT offers custom Java events with priority'
+mainClassName = "$moduleName/eu.hansolo.evt/example/Main"
 
 Date buildTimeAndDate = new Date()
 ext {
-    buildDate = new SimpleDateFormat('yyyy-MM-dd').format(buildTimeAndDate)
-    buildTime = new SimpleDateFormat('HH:mm:ss.SSSZ').format(buildTimeAndDate)
+    moduleName      = 'eu.hansolo.fx.countries'
+    buildDate       = new SimpleDateFormat('yyyy-MM-dd').format(buildTimeAndDate)
+    buildTime       = new SimpleDateFormat('HH:mm:ss.SSSZ').format(buildTimeAndDate)
+    ciOssrhUsername = System.getenv('OSSRH_USERNAME')
+    ciOssrhPassword = System.getenv('OSSRH_PASSWORD')
+    ciGHUser        = System.getenv('GH_USER')
+    ciGHToken       = System.getenv('GH_TOKEN')
+    gpgkey          = System.getenv("GPG_PRIVATE_KEY")
+    gpgpassphrase   = System.getenv("PASSPHRASE")
+}
+
+repositories {
+    mavenCentral()
 }
 
 dependencies {
 }
 
-// Supress javadoc warnings
-if (JavaVersion.current().isJava8Compatible()) {
-    allprojects {
-        tasks.withType(Javadoc) {
-            options.addStringOption('Xdoclint:none', '-quiet')
-        }
-    }
-}
 
 jar {
+    from {
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+        configurations.runtimeClasspath.collect {  it.isDirectory() ? it : zipTree(it)  }
+    } {
+        exclude "META-INF/*.SF"
+        exclude "META-INF/*.DSA"
+        exclude "META-INF/*.RSA"
+    }
     manifest {
         attributes(
                 'Built-By'              : System.properties['user.name'],
@@ -59,18 +59,16 @@ jar {
                 'Implementation-Title'  : project.name,
                 'Implementation-Version': project.version,
                 'Bundle-Name'           : project.name,
-                'Bundle-License'        : 'https://www.apache.org/licenses/LICENSE-2.0;description=Apache License Version 2.0;link=https://www.eclipse.org/legal/eplfaq.php',
+                'Bundle-License'        : 'https://www.apache.org/licenses/LICENSE-2.0;description=Apache License Version 2.0;link=https://spdx.org/licenses/Apache-2.0.html',
                 'Bundle-Description'    : description,
                 'Bundle-SymbolicName'   : 'eu.hansolo.evt',
-                'Export-Package'        : 'eu.hansolo.evt,eu.hansolo.evt.example'
+                'Export-Package'        : 'eu.hansolo.evt, eu.hansolo.evt.example',
+                'Class-Path'            : '${project.name}-${project.version}.jar',
+                'Main-Class'            : 'eu.hansolo.evt.example.Main'
         )
     }
 }
 
-repositories {
-    jcenter()
-    mavenCentral()
-}
 
 // start the demo from gradle
 task Demo(type: JavaExec) {
@@ -96,76 +94,75 @@ artifacts {
     archives sourcesJar
 }
 
-def pomConfig = {
-    name 'evt'
-    // Description won't be used when creating the pom file automatically.
-    // So I've added it manually in the pom.withXml{} section in the publishing task
-    url 'https://github.com/HanSolo/evt/wiki'
-    inceptionYear '2020'
-    licenses {
-        license([:]) {
-            name 'The Apache Software License, Version 2.0'
-            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-            distribution 'repo'
-        }
+signing {
+    if (gpgkey && gpgpassphrase) {
+        useInMemoryPgpKeys(gpgkey, gpgpassphrase)
     }
-    scm {
-        url 'scm:git@github.com:HanSolo/evt.git'
-        connection 'scm:git@github.com:HanSolo/evt.git'
-        developerConnection 'scm:git@github.com:HanSolo/evt.git'
-    }
-    developers {
-        developer {
-            id 'HanSolo'
-            name 'Gerrit Grunwald'
-        }
-    }
+
+    sign configurations.archives
+    sign publishing.publications
 }
 
 publishing {
     publications {
         mavenCustom(MavenPublication) {
+            group = 'eu.hansolo.fx'
+            artifactId = 'countries'
+            version = "${version}"
+
             from components.java
             artifact sourcesJar
             artifact javadocJar
 
             pom.withXml {
-                asNode().children().last() + pomConfig
-                asNode().appendNode('description', description)
+                asNode().dependencies.'*'.findAll {
+                    it.groupId.text() == 'org.openjfx'
+                }.each {
+                    it.remove(it.classifier)
+                }
+            }
+
+            pom {
+                name = 'Countries'
+                description = 'Countries is a JavaFX library containing controls and info for countries and cities'
+                url = "https://github.com/HanSolo/countries/wiki"
+                licenses {
+                    license {
+                        name = "The Apache License, Version 2.0"
+                        url = "http://www.apache.org/licenses/LICENSE-2.0.txt"
+                    }
+                }
+                developers {
+                    developer {
+                        id = "HanSolo"
+                        name = "Gerrit Grunwald"
+                        email = "han.solo@mac.com"
+                    }
+                }
+                scm {
+                    connection = "scm:git:https://HanSolo/countries"
+                    developerConnection = "scm:git:https://HanSolo/countries"
+                    url = "https://github.com/HanSolo/countries"
+                }
             }
         }
     }
-}
 
-if (!project.hasProperty('bintrayUsername')) ext.bintrayUsername = ''
-if (!project.hasProperty('bintrayApiKey')) ext.bintrayApiKey = ''
-if (!project.hasProperty('sonatypeUsername')) ext.sonatypeUsername = ''
-if (!project.hasProperty('sonatypePassword')) ext.sonatypePassword = ''
-
-
-bintray {
-    user = project.bintrayUsername
-    key  = project.bintrayApiKey
-    publications = ['mavenCustom']
-    pkg {
-        repo                  = 'EVT'
-        userOrg               = 'hansolo'
-        name                  = project.name
-        desc                  = description
-        licenses              = ['Apache-2.0']
-        labels                = ['java']
-        websiteUrl            = 'https://github.com/HanSolo/evt/wiki'
-        issueTrackerUrl       = 'https://github.com/HanSolo/evt/issues'
-        vcsUrl                = 'git@github.com:HanSolo/evt.git'
-        publicDownloadNumbers = true
-        version {
-            name   = project.version
-            vcsTag = project.version
-            mavenCentralSync {
-                sync = true
-                user = project.sonatypeUsername
-                password = project.sonatypePassword
-                close = '1'
+    repositories {
+        maven {
+            name = "OSSRH"
+            url = 'https://oss.sonatype.org/service/local/staging/deploy/maven2'
+            credentials {
+                username = null == ciOssrhUsername ? ossrhUsername : ciOssrhUsername
+                password = null == ciOssrhPassword ? ossrhPassword : ciOssrhPassword
+            }
+        }
+        maven {
+            name = "GitHubPackages"
+            url = "https://maven.pkg.github.com/HanSolo/countries"
+            credentials {
+                username = null == ciGHUser  ? ghUser  : ciGHUser
+                password = null == ciGHToken ? ghToken : ciGHToken
             }
         }
     }
